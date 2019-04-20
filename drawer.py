@@ -32,12 +32,12 @@ class DrawerFrame(wx.Frame):
 
     def __init__(self):
         """Initialize interface."""
-        super().__init__(None, wx.ID_ANY, 'Tracer - просмотрщик логов')
+        super().__init__(None, wx.ID_ANY, 'Tracer - просмотрщик логов', size=wx.Size(600, 400))
         self.command = Commands(self)
         self.path = ''
         title_log = 'Выбор log файла:'
         wildcard_log = 'log file (*.log)|*.log|' \
-                      'All files (*.*)|*.*'
+                       'All files (*.*)|*.*'
 
         panel = wx.Panel(self, wx.ID_ANY)
         sizer_panel = wx.BoxSizer(wx.HORIZONTAL)
@@ -53,6 +53,7 @@ class DrawerFrame(wx.Frame):
                                           style=wx.FLP_OPEN |
                                           wx.FLP_USE_TEXTCTRL)
         self.log_ctrl.GetPickerCtrl().SetLabel('Обзор...')
+        self.but_load = wx.Button(panel, wx.ID_ANY, 'Загрузить')
         but_about = wx.Button(panel, wx.ID_ANY, 'О программе...')
         but_exit = wx.Button(panel, wx.ID_ANY, 'Выход')
         box_exceptions = wx.StaticBox(panel, wx.ID_ANY, 'Исключения')
@@ -70,6 +71,7 @@ class DrawerFrame(wx.Frame):
         log_browse_sizer = wx.StaticBoxSizer(box_log_browse, wx.VERTICAL)
         log_browse_sizer.Add(self.log_ctrl, 0, wx.EXPAND | wx.ALL, 5)
         log_sizer.Add(log_browse_sizer, 1, wx.EXPAND | wx.ALL, 5)
+        log_sizer.Add(self.but_load, 0, wx.EXPAND | wx.ALL, 5)
         log_sizer.Add(but_about, 0, wx.EXPAND | wx.ALL, 5)
         log_sizer.Add(but_exit, 0, wx.EXPAND | wx.ALL, 5)
         sizer.Add(log_sizer, 0, wx.EXPAND | wx.ALL)
@@ -93,9 +95,11 @@ class DrawerFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, getattr(self.command, 'add_exception'), self.but_add_exception)
         self.Bind(wx.EVT_BUTTON, getattr(self.command, 'del_exception'), self.but_del_exception)
         self.Bind(wx.EVT_LISTBOX, getattr(self.command, 'sel_mask'), self.masks)
+        self.Bind(wx.EVT_BUTTON, getattr(self.command, 'load_log'), self.but_load)
         self.Bind(wx.EVT_BUTTON, getattr(self.command, 'about'), but_about)
         self.Bind(wx.EVT_BUTTON, getattr(self.command, 'close'), but_exit)
 
+        self.but_load.Disable()
         self.but_add_exception.Disable()
         self.but_del_exception.Disable()
         self.Layout()

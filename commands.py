@@ -9,6 +9,8 @@ Created on 12.04.2019
 
 from dialogs import About
 
+from extrows import ExtRows
+
 
 class Commands:
     """Helper class, contains command for bind events, menu and buttons."""
@@ -18,12 +20,13 @@ class Commands:
         self.drawer = drawer
 
         self.masks = []
-        self.rows = []
-        self.hide_flags = []
+        self.rows = None
 
     def log_browse(self, event):
         """Change file log."""
         self.drawer.path = self.drawer.log_ctrl.GetPath()
+        if self.drawer.path != '':
+            self.drawer.but_load.Enable()
 
     def about(self, event):
         """Run about dialog."""
@@ -51,6 +54,17 @@ class Commands:
     def sel_mask(self, event):
         """Select mask in masks list."""
         self.drawer.but_del_exception.Enable()
+
+    def load_log(self, event):
+        """Load log data in traces control."""
+        with open(self.drawer.path, 'r') as log_file:
+            for row in log_file:
+                if self.rows is None:
+                    self.rows = ExtRows(row)
+                else:
+                    self.rows.add(row)
+            self.drawer.data.LoadFile(self.drawer.path)
+        self.drawer.but_load.Disable()
 
     def add_exception(self, event):
         """Add exception to masks list."""

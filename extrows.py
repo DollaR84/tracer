@@ -33,3 +33,30 @@ class ExtRows:
         self.last.next = ExtRow(row, self.last.num+1)
         self.last.next.prev = self.last
         self.last = self.last.next
+
+    def get_hide_before(self, elem):
+        """Return the sum hide rows with before list to element."""
+        result = 0
+        while elem is not None:
+            if elem.hide:
+                result += 1
+            elem = elem.prev
+        return result
+
+    def change(self, subrow, hide):
+        """Hide or show row which included subrow.
+
+        subrow - string for find in row;
+        hide - flag for hide or show;
+
+           Return list index rows which hide.
+        """
+        result = []
+        elem = self.head
+        while elem is not None:
+            if elem.row.find(subrow) != -1:
+                elem.hide = hide
+                num = elem.num - self.get_hide_before(elem.prev)
+                result.append(num)
+            elem = elem.next
+        return result

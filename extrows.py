@@ -44,19 +44,19 @@ class ExtRows:
         return result
 
     def change(self, subrow, hide):
-        """Hide or show row which included subrow.
-
-        subrow - string for find in row;
-        hide - flag for hide or show;
-
-           Return list index rows which hide.
-        """
-        result = []
+        """Hide or show row which included subrow."""
         elem = self.head
         while elem is not None:
             if elem.row.find(subrow) != -1:
                 elem.hide = hide
-                num = elem.num - self.get_hide_before(elem.prev)
-                result.append(num)
             elem = elem.next
-        return result
+
+    def get_rows(self):
+        """Return all show rows."""
+        rows = []
+        elem = self.head
+        while elem is not None:
+            if not elem.hide:
+                rows.append(elem.row)
+            elem = elem.next
+        return ''.join(rows)

@@ -57,19 +57,33 @@ class Commands:
 
     def load_log(self, event):
         """Load log data in traces control."""
-        with open(self.drawer.path, 'r') as log_file:
+        with open(self.drawer.path, 'r', encoding="utf-8") as log_file:
             for row in log_file:
                 if self.rows is None:
                     self.rows = ExtRows(row)
                 else:
                     self.rows.add(row)
-            self.drawer.data.LoadFile(self.drawer.path)
+            self.drawer.data.SetValue(self.rows.get_rows())
         self.drawer.but_load.Disable()
 
     def add_exception(self, event):
         """Add exception to masks list."""
-        pass
+        subrow = self.drawer.mask.GetValue()
+        self.masks.append(subrow)
+        self.drawer.masks.Set(self.masks)
+        self.drawer.mask.SetValue('')
+        self.rows.change(subrow, True)
+        position = self.drawer.data.GetInsertionPoint()
+        self.drawer.data.SetValue(self.rows.get_rows())
+        self.drawer.data.SetInsertionPoint(position)
 
     def del_exception(self, event):
         """Remove mask from list masks."""
-        pass
+        index = self.drawer.masks.GetSelection()
+        subrow = self.masks.pop(index)
+        self.drawer.masks.Set(self.masks)
+        self.drawer.but_del_exception.Disable()
+        self.rows.change(subrow, False)
+        position = self.drawer.data.GetInsertionPoint()
+        self.drawer.data.SetValue(self.rows.get_rows())
+        self.drawer.data.SetInsertionPoint(position)

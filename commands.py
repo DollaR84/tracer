@@ -8,6 +8,7 @@ Created on 12.04.2019
 """
 
 from dialogs import About
+from dialogs import Message
 
 from extrows import ExtRows
 
@@ -18,6 +19,7 @@ class Commands:
     def __init__(self, drawer):
         """Initilizing commands class."""
         self.drawer = drawer
+        self.message = Message(self.drawer)
 
         self.masks = []
         self.rows = None
@@ -65,6 +67,7 @@ class Commands:
                     self.rows.add(row)
             self.drawer.data.SetValue(self.rows.get_rows())
         self.drawer.but_load.Disable()
+        self.message.information('Информация', 'Файл лога загружен')
 
     def add_exception(self, event):
         """Add exception to masks list."""
@@ -72,10 +75,11 @@ class Commands:
         self.masks.append(subrow)
         self.drawer.masks.Set(self.masks)
         self.drawer.mask.SetValue('')
-        self.rows.change(subrow, True)
+        count = self.rows.change(subrow, True)
         position = self.drawer.data.GetInsertionPoint()
         self.drawer.data.SetValue(self.rows.get_rows())
         self.drawer.data.SetInsertionPoint(position)
+        self.message.information('Информация', 'Скрыто %d строк' % count)
 
     def del_exception(self, event):
         """Remove mask from list masks."""
@@ -83,7 +87,8 @@ class Commands:
         subrow = self.masks.pop(index)
         self.drawer.masks.Set(self.masks)
         self.drawer.but_del_exception.Disable()
-        self.rows.change(subrow, False)
+        count = self.rows.change(subrow, False)
         position = self.drawer.data.GetInsertionPoint()
         self.drawer.data.SetValue(self.rows.get_rows())
         self.drawer.data.SetInsertionPoint(position)
+        self.message.information('Информация', 'Добавлено %d строк' % count)

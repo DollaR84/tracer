@@ -45,11 +45,14 @@ class ExtRows:
 
     def change(self, subrow, hide):
         """Hide or show row which included subrow."""
+        result = 0
         elem = self.head
         while elem is not None:
             if elem.row.find(subrow) != -1:
                 elem.hide = hide
+                result += 1
             elem = elem.next
+        return result
 
     def get_rows(self):
         """Return all show rows."""

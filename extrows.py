@@ -10,6 +10,7 @@ Created on 20.04.2019
 
 class ExtRow:
     """Extended row class."""
+    __slots__ = 'row', 'num', 'hide', 'prev', 'next'
 
     def __init__(self, row, num):
         """Initialise extended row class."""
